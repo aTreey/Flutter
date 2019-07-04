@@ -42,8 +42,10 @@ class CustomRoute extends PageRouteBuilder {
           //   child: child,
           // );
 
+        /*
+          // 旋转+缩放
 
-          return RotationTransition(
+        return RotationTransition(
         turns: Tween(begin: 0.0, end: 1.0)
         .animate(
           CurvedAnimation(
@@ -64,6 +66,22 @@ class CustomRoute extends PageRouteBuilder {
         ),
       );
 
+      */
+
+      // 左右滑动
+
+      return SlideTransition(
+        position: Tween(
+          begin: Offset(1.0, 0.0),
+          end: Offset(0.0, 0.0)
+        ).animate(
+          CurvedAnimation(
+            parent: animation1,
+            curve: Curves.fastOutSlowIn
+          )
+        ),
+        child: child,
+      );
       }
     );
 
