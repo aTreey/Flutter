@@ -1,6 +1,7 @@
 // 导入头文件
 import 'dart:math';
 
+import 'package:app_flutter/pages/launch_animation_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
@@ -23,9 +24,10 @@ class BottomNavigationDemo extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter 底部导航栏 demo',
       theme: ThemeData.light(), // 设置主题
-      home: BottomNavigationWidget() // 自定义的底部导航栏组件
+      home: LaunchAnimation() // 自定义的底部导航栏组件
     );
   }
 }

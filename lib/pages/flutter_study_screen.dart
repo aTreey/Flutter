@@ -1,3 +1,5 @@
+import 'package:app_flutter/flutter_study/expand_list.dart';
+import 'package:app_flutter/flutter_study/flutter_bezier_screen.dart';
 import 'package:flutter/material.dart';
 
 class FlutterStudyScreen extends StatelessWidget {
@@ -30,7 +32,10 @@ class FlutterStudyScreen extends StatelessWidget {
     ..add(Product('row线性布局', 'row线性水平布局'))
     ..add(Product('NoChangeLayout', '不可变布局'))
     ..add(Product('AutoLayout', '可变布局'))
-    ..add(Product('layout', '混合布局'));
+    ..add(Product('layout', '混合布局'))
+    ..add(Product('展开控件', 'expandPanl'))
+    ..add(Product('贝塞尔曲线', '曲线'))
+    ;
   }
 }
 
@@ -219,6 +224,13 @@ class FlutterWidgetDetailView extends StatelessWidget {
       return MyRowLayout();
     }
 
+    else if (item.title == '展开控件') {
+      return ExpandListDemo();
+    }
+    
+    else if (item.title == '贝塞尔曲线'){
+          return BezierPathDemo();
+    }
   }
 }
 
