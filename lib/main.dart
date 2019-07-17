@@ -13,11 +13,11 @@ import 'custom_bottom_appBar.dart';
 //////// 底部tabBar构建 ////////////////////////
 ///
 
-// void main(List<String> args) {
-//   runApp(
-//     BottomNavigationDemo()
-//   );
-// }
+void main(List<String> args) {
+  runApp(
+    BottomNavigationDemo()
+  );
+}
 
 class BottomNavigationDemo extends StatelessWidget {
   @override
@@ -34,11 +34,11 @@ class BottomNavigationDemo extends StatelessWidget {
 
 //////////////// 底部tabBar自定义按钮///////////////////////////////
 // 通用试图eachView 的使用
-void main(List<String> args) {
-  runApp(
-    CustomBottomAppBarApp()
-  );
-}
+// void main(List<String> args) {
+//   runApp(
+//     CustomBottomAppBarApp()
+//   );
+// }
 
 
 

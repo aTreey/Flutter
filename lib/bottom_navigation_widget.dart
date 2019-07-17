@@ -1,11 +1,10 @@
 
 import 'package:flutter/material.dart';
-
 import 'pages/community_screen.dart';
 import 'pages/idea_screen.dart';
 import 'pages/mine_screen.dart';
 import 'pages/flutter_study_screen.dart';
-
+import 'pages/flutter_demo_screen.dart';
 
 /*
  * StatefulWidget ： 具有可变状态(state)的窗口组件
@@ -38,8 +37,8 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
     ..add(FlutterStudyScreen())
     ..add(CommunityScreen())
     ..add(IdeaScreen())
-    ..add(MineScreen());
-
+    ..add(MineScreen())
+    ..add(FlutterDemoScreen());
     super.initState();
   }
 
@@ -120,8 +119,21 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
                 color: _BottomNavigationColor
               ),
             )
+          ),
+
+          BottomNavigationBarItem(
+            icon: Icon(
+              Icons.track_changes,
+              color: _BottomNavigationColor,
+            ),
+            
+            title: Text(
+              'Demo',
+              style: TextStyle(
+                color: _BottomNavigationColor
+              ),
+            )
           )
-          
         ],
       ),
     );

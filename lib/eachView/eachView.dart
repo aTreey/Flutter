@@ -1,4 +1,6 @@
 
+import 'dart:ui' as prefix0;
+
 /**
  * 使用动态view生成四个主要页面
  * 
@@ -6,6 +8,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:app_flutter/custome_router.dart';
+import 'package:flutter/rendering.dart';
 
 
 class EachView extends StatefulWidget {
@@ -51,6 +54,13 @@ class _EachViewState extends State<EachView> {
               onPressed: (){
                 Navigator.of(context).push(CustomRoute(SecondPage()));
               },
+            ),
+
+            RaisedButton(
+              child: Text('毛玻璃效果'),
+              onPressed: (){
+                Navigator.of(context).push(CustomRoute(BlurView()));
+              },
             )
           ],
         ),
@@ -86,6 +96,59 @@ class SecondPage extends StatelessWidget {
           }
         ),
       ),
+    );
+  }
+}
+
+class BlurView extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Stack(
+        children: <Widget>[
+          ConstrainedBox(
+            constraints: const BoxConstraints.expand(), // 可扩展的
+            child:Image.network('https://timgsa.baidu.com/timg?image&quality=80&size=b9999_10000&sec=1545738629147&di=22e12a65bbc6c4123ae5596e24dbc5d3&imgtype=0&src=http%3A%2F%2Fpic30.photophoto.cn%2F20140309%2F0034034413812339_b.jpg')
+          ),
+
+          Center(
+            child: ClipRect( // 裁切长方形
+              child: BackdropFilter( // 滤镜
+                filter: prefix0.ImageFilter.blur(
+                  sigmaX: 5.0,
+                  sigmaY: 5.0
+                ),
+
+                child: Opacity(
+                  opacity: 0.8,
+                  child: Container(
+                    width: 500,
+                    height: 700,
+                    decoration: BoxDecoration(color: Colors.grey.shade200),
+
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        Text(
+                          '毛玻璃效果',
+                          style: Theme.of(context).textTheme.display3, // 设置比较酷炫的字体
+                        ),
+
+                        MaterialButton(
+                          child: Text('返回'),
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          )
+        ],
+      )
     );
   }
 }
