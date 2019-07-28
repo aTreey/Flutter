@@ -911,3 +911,206 @@ class MyText extends StatelessWidget{
     );
   }
 }
+
+// 1.商品列表
+class ProductListView extends StatelessWidget {
+  // 定义变量，里面是一个对象
+  final List<Product> products;
+  
+  // 使用构造方法 函数的方式接受参数
+  ProductListView({Key key, @required this.products}):super(key:key); // 设置必参，调用父类方法
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('商品列表'),
+      ),
+
+      // 使用 ListView.builder 动态构建
+      body: ListView.builder(
+        itemCount: products.length,
+        itemBuilder: (context, index) {
+          return ListTile(
+            title: Text(products[index].title),
+            onLongPress: (){
+              print("长按事件响应");
+            },
+
+
+            // 点击时传入参数
+            onTap: (){
+              print('点击事件');
+              // Navigator.push(
+              //   context, 
+              //   MaterialPageRoute(
+              //     builder: (context) => ProducterDetailView(product:products[index])
+              //   )
+              // );
+              _jump2ProductDetailPage(context, products[index]);
+            },
+          );
+        },
+      ),
+    );
+  }
+
+
+  // 跳转详情页面并处理返回的参数
+  _jump2ProductDetailPage(BuildContext context, product) async {
+    final result = await Navigator.push(
+      context, 
+      MaterialPageRoute(builder: (context) => ProducterDetailView(product: product))
+    );
+
+    // 接受回传的参数 result
+    
+    Scaffold.of(context).showSnackBar(SnackBar(content: Text('返回的参数是：$result')));
+  }
+}
+
+// 商品详情页面
+class ProducterDetailView extends StatelessWidget {
+  final Product product;
+
+  ProducterDetailView({Key key, @required this.product}):super(key:key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Product ${product.title} 详情页面')
+      ),
+      
+      body: Center(
+        // 有多控件
+        child: Column(
+          children: <Widget>[
+            Image.asset('lib/assets/ideaOne.png'),
+            Text('Product ${product.title} desc ${product.description}'),
+            RaisedButton(
+              child: Text('back Product List'),
+              color: Colors.blue,
+              onPressed: (){
+                Navigator.pop(context, 'selected Id = ${product.title}');
+              },
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+///// 页面导航
+
+class FirstScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: AppBar(
+        title: new Text('第一个页面'),
+      ),
+
+      body: Center(
+        child: RaisedButton(
+          child: new Text('点击跳转详情页'),
+          onPressed: (){
+            Navigator.push(context, new MaterialPageRoute(
+              builder: (context) => (new SecondScreen())
+              // builder: (context){
+              //   new SecondScreen();
+              // }
+            ));
+          },
+        ),
+      ),
+    );
+  }
+}
+
+class SecondScreen extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('详情页面')
+      ),
+
+      body: Center(
+        child: RaisedButton(
+          child: Text('返回上一级页面'),
+
+          onPressed: () => (Navigator.pop(context)),
+
+          // onPressed: (){
+          //   Navigator.pop(context);
+          // },
+        ), 
+      ),
+    );
+  }
+}
+
+
+
+class MyLearningFlutterHome extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return new Scaffold(
+      appBar: new AppBar(
+        title: new Text('flutter 基础组件和布局学习'),
+      ),
+
+      body: Mycenter(),
+    );
+  }
+}
+
+class Mycenter extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      //   // child: Mycontainer1(),
+        //   // child: new MyContainer2(),
+        //   // child: new MyImage(),
+        // child: MyListView(),
+        // child: MyNetworkingImageListView(),
+        // child: MyListViewBuilder(),
+        // child: MyListViewSeparated(context),
+        // child: MyHorizontalListView(),
+
+
+        // child: new ListView.builder(
+        //   itemCount: items.length,
+        //   itemBuilder: (context, index){
+        //     return ListTile(
+        //       title: new Text('我是动态列表${items[index]}'),
+        //     );
+        //   },
+        // ),
+
+
+        // 通过参数创建
+        // child: MyDynamicListView(key: key, items: items),
+
+        // child: MyGridView(),
+
+        // child: MyGridView2(),
+
+// 布局
+        // child: MyRowNoChangeLayout(),
+
+        // child: MyRowAutoLayout(),
+
+        // child: MyRowLayout(),
+
+          // child: MyColunmLayout(),
+
+          // child: MyStackLayout(),
+
+          // child: MyMoreStackLayout(),
+
+          // child: MyCardLayout(),
+    );
+  }
+}
