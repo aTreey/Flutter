@@ -1,13 +1,9 @@
 // 导入头文件
-import 'dart:math';
-
-import 'package:app_flutter/pages/launch_animation_screen.dart';
+import 'package:app_flutter/flutter_study/pages/launch_animation_screen.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
-import 'bottom_navigation_widget.dart';
-import 'custom_bottom_appBar.dart';
 
 
 
