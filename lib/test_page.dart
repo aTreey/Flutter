@@ -39,6 +39,10 @@ class _TestState extends State<TestPage> {
               ),
 
               RaisedButton(
+                onPressed: _geekH5TopNavList,
+                child: Text('极客邦商城导航数据'),
+              ),
+              RaisedButton(
                 onPressed: _geeKBangBannerList,
                 child: Text('获取极客邦banner数据'),
               ),
@@ -68,6 +72,13 @@ class _TestState extends State<TestPage> {
     );
   }
 
+  void _geekH5TopNavList(){
+    getTopNavListData().then((value){
+      setState(() {
+        showTextStr=value['data'].toString();
+      });
+    });
+  }
 
   void _geeKBangBannerList(){
     getGeekBangListData().then((value){

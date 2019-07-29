@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 
 class HomePage extends StatefulWidget {
@@ -25,9 +26,9 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('首页'),
-      ),
+      // appBar: AppBar(
+      //   title: Text('首页'),
+      // ),
       body: SingleChildScrollView(
         //TODO: 使用FutureBuilder 等待异步请求的数据回来之后再渲染，不需要使用动态组件设置setState方法
         child: FutureBuilder(
@@ -57,6 +58,7 @@ class _HomePageState extends State<HomePage> {
               return Column(
                 children: <Widget>[
                   HomePageBanner(bannerList: bannerData),
+                  TopNavgator(navgatorItemList: _topNavData())
                 ],
               );
             } else {
@@ -68,6 +70,16 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
+  }
+
+  // 获取topNavdata
+  List _topNavData(){
+    List topNavData;
+    getTopNavListData().then((value){
+      print(value['data']);
+      topNavData = (value['data']['list'] as List).cast();
+    });
+    return topNavData;
   }
 }
 
@@ -88,21 +100,56 @@ class HomePageBanner extends StatelessWidget {
   
   @override
   Widget build(BuildContext context) {
+    // TODO: 初始化设计尺寸
     return Container(
-      height: 300,
+      width: ScreenUtil.screenWidth,
+      height: ScreenUtil.getInstance().setHeight(300),
       child: Swiper(
         itemCount: bannerList.length,
         itemBuilder: (context, index){
           // 对象使用{}
-          return Image.network("${bannerList[index]['banner_cover']}");
+          return Image.network("${bannerList[index]['banner_cover']}", fit: BoxFit.fill);
         },
-
         // banner 指示器
-        pagination: SwiperPagination(
-          alignment: Alignment.center,
-        ),
-
+        pagination: SwiperPagination(),
         autoplay: true,
+      ),
+    );
+  }
+}
+
+
+/**
+ * 九宫格控件
+ */
+
+class TopNavgator extends StatelessWidget {
+  final List navgatorItemList;
+  TopNavgator({Key key, this.navgatorItemList}) : super(key: key);
+  // 自定义item 控件
+  Widget _gridViewItemUI(BuildContext context, item){
+    return InkWell(
+      onTap: (){print('点击事件');},
+      child: Column(
+        children: <Widget>[
+          Image.network(''),
+          Text('测试')
+        ],
+      ),
+    );
+  }
+  
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: ScreenUtil.getInstance().setHeight(100),
+      padding: const EdgeInsets.all(5.0),
+      child: GridView.count(
+        crossAxisCount: 4,
+        padding: const EdgeInsets.all(5.0),
+        children: navgatorItemList.map((item){
+          return _gridViewItemUI(context, item);
+        }).toList(),
       ),
     );
   }

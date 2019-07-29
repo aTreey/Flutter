@@ -43,6 +43,22 @@ Future getGeekNewAllData() async{
 }
 
 
+Future getTopNavListData() async{
+  try {
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = geekH5httpHeaders;
+    response=await dio.get(servicePath['topNavList']);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误');
+    }
+  } catch (e) {
+    return print(e);
+  }
+}
+
 /*
  * 获取极客时间banner 数据 
  */
