@@ -19,7 +19,7 @@ class BottomClipperTest extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    // TODO: implement getClip
+    // TODO: 贝塞尔曲
 
     var path = Path();
     // path.lineTo(0, 0);
@@ -42,7 +42,7 @@ class BottomClipperTest extends CustomClipper<Path> {
 
   @override
   bool shouldReclip(CustomClipper<Path> oldClipper) {
-    // TODO: implement shouldReclip
+    
     return false;
   }
 }

@@ -80,6 +80,24 @@ Future getGeekBangListData() async{
     }
   }
 
+
+
+Future getNewProductListData() async{
+  try {
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = geekH5httpHeaders;
+    response=await dio.get(servicePath['newProduct']);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误');
+    }
+  } catch (e) {
+    return print(e);
+  }
+}
+
 /*
  * Dio get 请求测试 
  */

@@ -28,10 +28,9 @@ class _BottomNavigationWidgetState extends State<BottomNavigationWidget> {
   // 声明页面集合
   List<Widget> pages = List();
 
-  // 重写init 方法
+  // TODO: 重写init 方法
   @override
   void initState() {
-    // TODO: implement initState
     // 初始化 pages 
     pages
     ..add(FlutterStudyScreen())

@@ -30,7 +30,7 @@ class _FlutterDemoScreenState extends State<FlutterDemoScreen> with SingleTicker
   @override
   void dispose() {
     _controller.dispose();
-    // TODO: implement dispose
+    // TODO: 生命周期
     super.dispose();
   }
 

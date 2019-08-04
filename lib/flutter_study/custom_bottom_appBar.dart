@@ -35,7 +35,6 @@ class _CustomBottomAppBarState extends State<CustomBottomAppBar> {
   
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     _eachViews=List();
     
