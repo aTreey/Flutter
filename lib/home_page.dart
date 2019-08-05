@@ -45,50 +45,45 @@ class _HomePageState extends State<HomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: homePageAppBar(),
-      body: 
-      // Container(
-      //   child: Column(
-      //     children: <Widget>[
-            FutureBuilder(
-                future: getGeekBangListData(),
-                builder: (BuildContext context, AsyncSnapshot snapshot){
-                  switch (snapshot.connectionState) {
-                    case ConnectionState.none:
-                      print('snapshot none');
-                      break;
-                    case ConnectionState.waiting:
-                      print('snapshot waiting');
-                      break;
-                    case ConnectionState.active:
-                      print('snapshot active');
-                      break;
-                    case ConnectionState.done:
-                      if (snapshot.hasError) {
-                        print('snapshot error ====>  ${snapshot.error}');
-                      }
-                      break;
-                  }
-                  if (snapshot.hasData) {
-                    List<Map> bannerData = (snapshot.data['data']['list'] as List).cast();
-                    List<Map> topNavgatorData = (snapshot.data['data']['list'] as List).cast();
-                    return Column(
+      body: FutureBuilder(
+              future: getGeekBangListData(),
+              builder: (BuildContext context, AsyncSnapshot snapshot){
+                switch (snapshot.connectionState) {
+                  case ConnectionState.none:
+                    print('snapshot none');
+                    break;
+                  case ConnectionState.waiting:
+                    print('snapshot waiting');
+                    break;
+                  case ConnectionState.active:
+                    print('snapshot active');
+                    break;
+                  case ConnectionState.done:
+                    if (snapshot.hasError) {
+                      print('snapshot error ====>  ${snapshot.error}');
+                    }
+                    break;
+                }
+                if (snapshot.hasData) {
+                  List<Map> bannerData = (snapshot.data['data']['list'] as List).cast();
+                  List<Map> topNavgatorData = (snapshot.data['data']['list'] as List).cast();
+                  return SingleChildScrollView(
+                    child: Column(
                       children: <Widget>[
                         HomePageBanner(bannerList: bannerData),
                         TopNavgator(navgatorItemList: topNavgatorData),
                         SkillMapSearch(),
                         NewProductWidget(newProductData:newProductData)
                       ],
-                    );
-                  } else {
-                    return Center(
-                      child: Text('banner 数据加载中。。。'),
-                    );
-                  }
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: Text('banner 数据加载中。。。'),
+                  );
                 }
-              )
-      //     ],
-      //   ),
-      // )
+              }
+            )
     );
   }
 }
@@ -217,30 +212,72 @@ class NewProductWidget extends StatelessWidget {
   NewProductWidget({this.newProductData});
 
   Widget _contentWidget(){
+    print('data = ${newProductData}');
     return InkWell(
+      splashColor: Colors.blue,
+      focusColor: Colors.yellow,
+      hoverColor: Colors.red,
       onTap: (){print('点击新品');},
       child: Container(
         padding: EdgeInsets.all(0),
-        child: Column(
-          children: <Widget>[
-            Image.network("$newProductData['image_url']"),
-            Text("$newProductData['title']", style: TextStyle(fontSize: 16.0)),
-            Text("$newProductData['sub_title']", 
-              style: TextStyle(fontSize: 12.0, color: Colors.black45)
-            )
-          ],
-        ),
+        child: Container(
+          color: Colors.white,
+          child: Stack(
+            children: <Widget>[
+              _imageContent(),
+              _newTag(),
+            ],
+          ),
+        )
       ),
+    );
+  }
+
+  Widget _newTag(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(15.0, 25.0, 0, 0),
+      child: Container(
+        alignment: Alignment.centerLeft,
+        width: ScreenUtil().setWidth(100),
+        color: Colors.red,
+        child: Container(
+          margin: EdgeInsets.fromLTRB(5, 5, 5, 5),
+          child: Text('新品'),
+        ),
+      )
+    );
+  }
+
+  Widget _imageContent(){
+    return Column(
+      children: <Widget>[
+        Image.network(newProductData[0]['image_url']),
+        Container(
+          padding: EdgeInsets.only(top: 15, left: 15),
+          alignment: Alignment.centerLeft,
+          child: Text(newProductData[0]['title'], textAlign: TextAlign.left, style: TextStyle(fontSize: 16.0)),
+        ),
+        Container(
+          alignment: Alignment.centerLeft,
+          padding: EdgeInsets.only(left: 15),
+          child: Text(newProductData[0]['sub_title'], 
+            textAlign: TextAlign.left,
+            style: TextStyle(fontSize: 12.0, color: Colors.black45)
+          ),
+        )
+      ],
     );
   }
 
   Widget _priceWidget(){
     return Container(
-      padding: EdgeInsets.all(0),
+      color: Colors.white,
+      padding: EdgeInsets.all(15),
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
-            "$newProductData['price']", 
+            '${newProductData[0]['price']}', 
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 18.0, color: Colors.orange)
           ),
@@ -275,7 +312,7 @@ class RecommendWidget extends StatelessWidget {
 
   Widget _titleWidget(){
     return Container(
-      alignment: Alignment.centerLeft, // 靠左中间对齐
+      alignment: Alignment.center, // 靠左中间对齐
       padding: EdgeInsets.fromLTRB(15.0, 2.0, 15, 2.0),
       // 盒子样式
       decoration: BoxDecoration(
