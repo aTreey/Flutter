@@ -4,6 +4,64 @@ import 'package:dio/dio.dart';
 import 'package:app_flutter/config/httpHeader.dart';
 import 'package:app_flutter/config/serviceUrl.dart';
 
+/*
+ * TODO: 封装简单Get网络请求
+ * url: 请求地址
+ * {formData} 可选参数 
+ */ 
+
+Future requestPost(url, headers, {formData}) async{
+  try {
+    print('start request === $url, formData = ${formData}');
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = headers;
+    // 设置请求头（类型）
+    // dio.options.contentType=ContentType.parse('application/x-www-form-urlencoded');
+    if (formData==null) {
+      response = await dio.post(servicePath[url]);
+    } else {
+      response = await dio.post(servicePath[url], data: formData);
+    }
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
+}
+
+/*
+ * TODO: 封装简单Post网络请求
+ * url: 请求地址
+ * {parameters} 可选参数 
+ */ 
+Future requestGet(url, headers, {parameters}) async{
+  try {
+    print('start request === $url, formData = ${parameters}');
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = headers;
+    // 设置请求头（类型）
+    // dio.options.contentType=ContentType.parse('application/x-www-form-urlencoded');
+    if (parameters==null) {
+      response = await dio.get(servicePath[url]);
+    } else {
+      response = await dio.get(servicePath[url], queryParameters: parameters);
+    }
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
+}
+
+
 Future getCommunityData() async{
     // 捕获异常
   try {
@@ -44,19 +102,20 @@ Future getGeekNewAllData() async{
 
 
 Future getTopNavListData() async{
-  try {
-    Response response;
-    Dio dio = Dio();
-    dio.options.headers = geekH5httpHeaders;
-    response=await dio.get(servicePath['topNavList']);
-    if (response.statusCode==200) {
-      return response.data;
-    } else {
-      throw Exception('接口错误');
-    }
-  } catch (e) {
-    return print(e);
-  }
+  requestGet('topNavList', geekH5httpHeaders);
+  // try {
+  //   Response response;
+  //   Dio dio = Dio();
+  //   dio.options.headers = geekH5httpHeaders;
+  //   response=await dio.get(servicePath['topNavList']);
+  //   if (response.statusCode==200) {
+  //     return response.data;
+  //   } else {
+  //     throw Exception('接口错误');
+  //   }
+  // } catch (e) {
+  //   return print(e);
+  // }
 }
 
 /*
