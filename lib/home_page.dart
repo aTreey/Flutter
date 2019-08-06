@@ -14,11 +14,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   
+  int page = 0;
   String homePageContent='加载中...';
   
   List<Map> bannerData;
   List<Map> topNavData;
   List<Map> newProductData;
+  List<Map> excellentData;
+
+
   @override
   void initState() {
     // getCommunityData().then((value){
@@ -37,6 +41,10 @@ class _HomePageState extends State<HomePage> {
 
     getNewProductListData().then((val){
       newProductData=(val['data']['list'] as List).cast();
+    });
+
+    getExcellentList().then((val){
+      excellentData=(val['data']['list'] as List).cast();
     });
     
     super.initState();
@@ -86,6 +94,25 @@ class _HomePageState extends State<HomePage> {
             )
     );
   }
+
+  Widget excellentTitle=Container(
+    color: Colors.white,
+    margin: EdgeInsets.all(15),
+    child: Row(
+      children: <Widget>[
+        Image.asset("Icons.add_box"),
+        Text('优选系列'),
+        RaisedButton(
+          onPressed: (){
+            print('查看全部优选');
+          },
+          child: Text(
+            '全部',
+          ),
+        )
+      ],
+    )
+  );
 }
 
 
@@ -392,6 +419,11 @@ class RecommendWidget extends StatelessWidget {
   }
 }
 
+
+/*
+ * 优选系列 
+ * TODO: flutter 中实现上拉加载更多，redux、bloc、state、Provide
+ */
 
 // appBar
 Widget homePageAppBar(){
