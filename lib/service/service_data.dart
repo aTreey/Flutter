@@ -24,7 +24,9 @@ Future getCommunityData() async{
   }
 } 
 
-
+/*
+ * 获取推荐数据 
+ */
 Future getRecommendList() async{
   return requestGet('recommendList', geekH5httpHeaders);
 }

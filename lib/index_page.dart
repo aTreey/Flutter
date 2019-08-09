@@ -88,7 +88,12 @@ class _IndexPageState extends State<IndexPage> {
           });
         },
       ),
-      body: currentPage,
+
+      // TODO: IndexedStack 是一个堆栈
+      body: IndexedStack(
+        index: currentIndex,
+        children: tabPages,
+      ),
     );
   }
 }

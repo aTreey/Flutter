@@ -10,7 +10,14 @@ class HomePage extends StatefulWidget {
   _HomePageState createState() => _HomePageState();
 }
 
-class _HomePageState extends State<HomePage> {
+/*
+ * TODO: 保持页面状态 AutomaticKeepAliveClientMixin
+ * - 页面必须是StatefulWidget,如果是StatelessWidget是没办法办法使用的。
+ * - 两个前置组件才能保持页面状态：PageView和IndexedStack。
+ * - 重写wantKeepAlive方法，返回为true
+ */ 
+
+class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   
   int page = 0;
   String homePageContent='加载中...';
@@ -21,6 +28,10 @@ class _HomePageState extends State<HomePage> {
   List<Map> recommendData;
   List<Map> excellentData;
 
+  
+  // 保持页面状态
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -44,6 +55,7 @@ class _HomePageState extends State<HomePage> {
 
     getExcellentList().then((val){
       excellentData=(val['data']['list'] as List).cast();
+      print('getExcellentList = $excellentData, val=$val');
     });
 
     getRecommendList().then((val){
