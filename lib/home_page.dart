@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
@@ -20,6 +18,7 @@ class _HomePageState extends State<HomePage> {
   List<Map> bannerData;
   List<Map> topNavData;
   List<Map> newProductData;
+  List<Map> recommendData;
   List<Map> excellentData;
 
 
@@ -46,7 +45,11 @@ class _HomePageState extends State<HomePage> {
     getExcellentList().then((val){
       excellentData=(val['data']['list'] as List).cast();
     });
-    
+
+    getRecommendList().then((val){
+      recommendData=(val['data']['list'] as List).cast();
+    });
+
     super.initState();
   }
   @override
@@ -54,7 +57,7 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       appBar: homePageAppBar(),
       body: FutureBuilder(
-              future: getGeekBangListData(),
+              future: getGeekBannerListData(),
               builder: (BuildContext context, AsyncSnapshot snapshot){
                 switch (snapshot.connectionState) {
                   case ConnectionState.none:
@@ -81,7 +84,8 @@ class _HomePageState extends State<HomePage> {
                         HomePageBanner(bannerList: bannerData),
                         TopNavgator(navgatorItemList: topNavgatorData),
                         SkillMapSearch(),
-                        NewProductWidget(newProductData:newProductData)
+                        NewProductWidget(newProductData:newProductData),
+                        RecommendWidget(recommendList: recommendData),
                       ],
                     ),
                   );
@@ -239,7 +243,7 @@ class NewProductWidget extends StatelessWidget {
   NewProductWidget({this.newProductData});
 
   Widget _contentWidget(){
-    print('data = ${newProductData}');
+    print('data = $newProductData');
     return InkWell(
       splashColor: Colors.blue,
       focusColor: Colors.yellow,
@@ -278,16 +282,16 @@ class NewProductWidget extends StatelessWidget {
   Widget _imageContent(){
     return Column(
       children: <Widget>[
-        Image.network(newProductData[0]['image_url']),
+        Image.network('${newProductData.first['image_url']}'),
         Container(
           padding: EdgeInsets.only(top: 15, left: 15),
           alignment: Alignment.centerLeft,
-          child: Text(newProductData[0]['title'], textAlign: TextAlign.left, style: TextStyle(fontSize: 16.0)),
+          child: Text(newProductData.first['title'], textAlign: TextAlign.left, style: TextStyle(fontSize: 16.0)),
         ),
         Container(
           alignment: Alignment.centerLeft,
           padding: EdgeInsets.only(left: 15),
-          child: Text(newProductData[0]['sub_title'], 
+          child: Text(newProductData.first['sub_title'], 
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 12.0, color: Colors.black45)
           ),
@@ -304,7 +308,7 @@ class NewProductWidget extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: <Widget>[
           Text(
-            '${newProductData[0]['price']}', 
+            '${newProductData.first['price']}', 
             textAlign: TextAlign.left,
             style: TextStyle(fontSize: 18.0, color: Colors.orange)
           ),
@@ -334,16 +338,16 @@ class NewProductWidget extends StatelessWidget {
 
 class RecommendWidget extends StatelessWidget {
 
-  final List recommendList;
-  RecommendWidget(this.recommendList);
+  final List<Map> recommendList;
+  RecommendWidget({this.recommendList});
 
   Widget _titleWidget(){
     return Container(
-      alignment: Alignment.center, // 靠左中间对齐
+      alignment: Alignment.centerLeft, // 靠左中间对齐
       padding: EdgeInsets.fromLTRB(15.0, 2.0, 15, 2.0),
       // 盒子样式
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Colors.green,
         border: Border(
           // 设置底部分割线
           bottom: BorderSide(
@@ -367,7 +371,6 @@ class RecommendWidget extends StatelessWidget {
     return InkWell(
       onTap: (){},
       child: Container(
-        height: ScreenUtil.getInstance().setHeight(330),
         width: ScreenUtil.getInstance().setWidth(250),
         padding: EdgeInsets.all(5.0),
         decoration: BoxDecoration(
@@ -379,10 +382,10 @@ class RecommendWidget extends StatelessWidget {
 
         child: Column(
           children: <Widget>[
-            Image.network(recommendList[index]['image_url']),
-            Text(recommendList[index]['title']),
-            Text(recommendList[index]['price'], style: TextStyle(color: Colors.orange), textAlign: TextAlign.left),
-            Text(recommendList[index]['origin'], style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey))
+            Image.network('${recommendList[index]['image_url']}'),
+            Text('${recommendList[index]['title']}'),
+            Text('${recommendList[index]['price']}', style: TextStyle(color: Colors.orange), textAlign: TextAlign.left),
+            Text('${recommendList[index]['origin']}', style: TextStyle(decoration: TextDecoration.lineThrough, color: Colors.grey))
           ],
         ),
       ),
@@ -391,9 +394,10 @@ class RecommendWidget extends StatelessWidget {
 
   Widget _recommendList(){
     return Container(
-      height: ScreenUtil.getInstance().setHeight(330),
-      margin: EdgeInsets.only(top: 10),
-
+      //TODO: ListView 需要指定高度
+      height: ScreenUtil.getInstance().setHeight(420),
+      margin: EdgeInsets.only(top: 5),
+      color: Colors.white,
       child: ListView.builder(
         scrollDirection: Axis.horizontal,
         itemCount: recommendList.length,
@@ -407,7 +411,7 @@ class RecommendWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: ScreenUtil.getInstance().setHeight(380),
+      color: Colors.cyan,
       margin: EdgeInsets.only(top: 10.0),
       child: Column(
         children: <Widget>[

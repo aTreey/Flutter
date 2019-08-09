@@ -81,7 +81,7 @@ class _TestState extends State<TestPage> {
   }
 
   void _geeKBangBannerList(){
-    getGeekBangListData().then((value){
+    getGeekBannerListData().then((value){
       setState(() {
         helperTextStr='网络请求成功';
         showTextStr=value['data'].toString();
