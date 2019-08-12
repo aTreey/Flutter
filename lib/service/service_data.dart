@@ -34,8 +34,8 @@ Future getRecommendList() async{
 /*
  * 请求优选数据 
  */
-Future getExcellentList() async{
-  return requestGet('excellentList', geekH5httpHeaders);
+Future getExcellentList(param) async{
+  return requestGet('excellentList', geekH5httpHeaders, parameters: param);
 }
 
 Future getTopNavListData() async{

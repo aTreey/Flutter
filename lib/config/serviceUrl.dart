@@ -6,9 +6,9 @@ const servicePath={
   'bannerList': serviceBaseUrl + '/serv/v2/explore/getBannerList',
   'newProduct': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=482663434',
   'recommend': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=488430191',
-  'recommendList': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=482663434%2C486923101%2C448154173%2C482663534%2C472810343%2C482667421',
-  'excellentList': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=482663434%2C486923101%2C448154173%2C482663534%2C472810343%2C482667421',
-  'topNavList' : 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=462162447%2C459109478%2C440159692%2C484661133%2C469060854%2C484657160%2C484660441%2C484661133%2C484401370%2C479876995',
+  'recommendList': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=482663434,448154173,482663534,472810343,479365010,491335761',
+  'excellentList': 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&&goodsIds=462162447,459109478,440159692,484661133,469060854,484657160,484660441,484661133,484401370,479876995,476141358,476145399,476138149,475790356,475710064,476168013,476146463,475711758',  
+  'topNavList' : 'https://h5.youzan.com/wscshop/showcase/goodsList.json?tagId=&page=1&pageSize=6&goodsIds=462162447,459109478,440159692,484661133,469060854,484657160,484660441,484661133,484401370,479876995',
   'community': serviceBaseUrl+''
 };
 

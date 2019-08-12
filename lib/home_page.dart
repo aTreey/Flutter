@@ -12,7 +12,7 @@ class HomePage extends StatefulWidget {
 
 /*
  * TODO: 保持页面状态 AutomaticKeepAliveClientMixin
- * - 页面必须是StatefulWidget,如果是StatelessWidget是没办法办法使用的。
+ * - 页面必须是StatefulWidget,不能是StatelessWidget否则无法使用。
  * - 两个前置组件才能保持页面状态：PageView和IndexedStack。
  * - 重写wantKeepAlive方法，返回为true
  */ 
@@ -26,8 +26,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   List<Map> topNavData;
   List<Map> newProductData;
   List<Map> recommendData;
-  List<Map> excellentData;
-
   
   // 保持页面状态
   @override
@@ -51,11 +49,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
     getNewProductListData().then((val){
       newProductData=(val['data']['list'] as List).cast();
-    });
-
-    getExcellentList().then((val){
-      excellentData=(val['data']['list'] as List).cast();
-      print('getExcellentList = $excellentData, val=$val');
     });
 
     getRecommendList().then((val){
@@ -98,6 +91,7 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                         SkillMapSearch(),
                         NewProductWidget(newProductData:newProductData),
                         RecommendWidget(recommendList: recommendData),
+                        ExcellentList()
                       ],
                     ),
                   );
@@ -440,6 +434,134 @@ class RecommendWidget extends StatelessWidget {
  * 优选系列 
  * TODO: flutter 中实现上拉加载更多，redux、bloc、state、Provide
  */
+
+
+class ExcellentList extends StatefulWidget {
+  @override
+  _ExcellentListState createState() => _ExcellentListState();
+}
+
+class _ExcellentListState extends State<ExcellentList> {
+
+  // 分页加载
+  int page = 1;
+
+  // 优选数据
+  List<Map> excellentData = [];
+
+  @override
+  void initState() {
+    _getExcellentListData();
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: Column(
+        children: <Widget>[
+          _excentTitleWidget(),
+          _wrapList()
+        ],
+      ),
+    );
+  }
+  // 优选标题控件
+  Widget _excentTitleWidget(){
+    return Padding(
+      padding: EdgeInsets.fromLTRB(15, 0, 15, 0),
+      child: Row(
+        children: <Widget>[
+          Icon(Icons.mail),
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Text('优选系列'),
+          ),
+          
+          Padding(
+            padding: EdgeInsets.all(0),
+            child: Text('全部'),
+          ),
+          
+          Padding(
+            padding: EdgeInsets.only(right: 15),
+            child: Icon(Icons.arrow_forward_ios),
+          )
+        ],
+      ),
+    );
+  }
+
+  void _getExcellentListData(){
+    var parameters={'page': page, 'pageSize': 6};
+    getExcellentList(parameters).then((val){
+      List<Map> data =(val['data']['list'] as List).cast();
+      setState(() {
+        excellentData.addAll(data);
+      });
+    });
+  }
+  
+  Widget _wrapList(){
+    if (excellentData == null || excellentData.length <= 0) {
+      return Text('优选数据为空');
+    } 
+
+    List<Widget> listWidget = excellentData.map((value){
+      return InkWell(
+        onTap: (){
+          print('点击了_wrapList---'); 
+        },
+
+        child: Container(
+          width: ScreenUtil().setHeight(372),
+          color: Colors.white,
+          padding: EdgeInsets.all(5),
+          margin: EdgeInsets.only(bottom: 3),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            // TODO: 处理左对齐方式一：使用 CrossAxisAlignment.start
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Image.network(value['image_url']),
+              Padding(
+                padding: EdgeInsets.all(10),
+                
+                // TODO: 处理左对齐方式二：Align 然后设置具体的某一个控件的对齐方式，控制更灵活
+                // child: Align(
+                //   alignment: Alignment.centerLeft,
+                //   child: Text(value['title']),
+                // )
+                child: Text(value['title'])
+              ),
+              
+              Row(
+                mainAxisAlignment:  MainAxisAlignment.spaceBetween,
+                children: <Widget>[
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 5, 15, 5),
+                    child: Text('¥${value['price']}',
+                      style: TextStyle(color: Colors.orange),
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(10, 0, 15, 5),
+                    child: Icon(Icons.shopping_cart, color: Colors.orange),
+                  )
+                ],
+              )
+            ],
+          ),
+        ),
+      );
+    }).toList();
+
+    return Wrap(
+      spacing: 2,
+      children: listWidget
+    );
+  }
+}
 
 // appBar
 Widget homePageAppBar(){
