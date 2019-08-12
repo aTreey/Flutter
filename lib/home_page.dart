@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
+import 'package:flutter_easyrefresh/easy_refresh.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_swiper/flutter_swiper.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -19,13 +22,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin {
   
-  int page = 0;
+  int page = 1;
+  int pagSize=6;
   String homePageContent='加载中...';
   
   List<Map> bannerData;
   List<Map> topNavData;
   List<Map> newProductData;
   List<Map> recommendData;
+  List<Map> excellentData=[];
   
   // 保持页面状态
   @override
@@ -55,6 +60,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       recommendData=(val['data']['list'] as List).cast();
     });
 
+    _getExcellentListData();
+
     super.initState();
   }
   @override
@@ -83,17 +90,30 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
                 if (snapshot.hasData) {
                   List<Map> bannerData = (snapshot.data['data']['list'] as List).cast();
                   List<Map> topNavgatorData = (snapshot.data['data']['list'] as List).cast();
-                  return SingleChildScrollView(
-                    child: Column(
+                  // TODO: 需要给整体添加下拉刷新
+                  // 使用 EasyRefresh， 要求必须是一个ListView
+                  return EasyRefresh(
+                    // TODO: 自定义footer https://github.com/xuelongqy/flutter_easyrefresh/blob/v2/document/cn/CUSTOM_HEADER_FOOTER.md
+                    child: ListView(
                       children: <Widget>[
                         HomePageBanner(bannerList: bannerData),
                         TopNavgator(navgatorItemList: topNavgatorData),
                         SkillMapSearch(),
                         NewProductWidget(newProductData:newProductData),
                         RecommendWidget(recommendList: recommendData),
-                        ExcellentList()
+                        ExcellentList(excellentData: excellentData)
                       ],
                     ),
+
+                    onRefresh: () async{
+                      print('下拉刷新');
+                    },
+
+                    // TODO: 加载更多数据
+                    onLoad: () async{
+                      _getExcellentListData();
+                      print('上拉加载-----');
+                    },
                   );
                 } else {
                   return Center(
@@ -123,6 +143,18 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
       ],
     )
   );
+
+  // 获取优选数据
+  void _getExcellentListData(){
+    var parameters={'page': page, 'pageSize': 6};
+    getExcellentList(parameters).then((val){
+      List<Map> data =(val['data']['list'] as List).cast();
+      setState(() {
+        // sleep(Duration(seconds: 5));
+        excellentData.addAll(data);
+      });
+    });
+  }
 }
 
 
@@ -226,6 +258,7 @@ class TopNavgator extends StatelessWidget {
       height: ScreenUtil().setHeight(320),
       padding: EdgeInsets.all(5.0),
       child: GridView.count(
+        physics: NeverScrollableScrollPhysics(),
         crossAxisCount: 3,
         crossAxisSpacing: 10,
         mainAxisSpacing: 8,
@@ -437,24 +470,17 @@ class RecommendWidget extends StatelessWidget {
 
 
 class ExcellentList extends StatefulWidget {
+  // TODO: 在 StatefulWidget 中定义变量
+
+  // 优选数据
+  List<Map> excellentData = [];
+  ExcellentList({this.excellentData});
+
   @override
   _ExcellentListState createState() => _ExcellentListState();
 }
 
 class _ExcellentListState extends State<ExcellentList> {
-
-  // 分页加载
-  int page = 1;
-
-  // 优选数据
-  List<Map> excellentData = [];
-
-  @override
-  void initState() {
-    _getExcellentListData();
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -491,23 +517,14 @@ class _ExcellentListState extends State<ExcellentList> {
       ),
     );
   }
-
-  void _getExcellentListData(){
-    var parameters={'page': page, 'pageSize': 6};
-    getExcellentList(parameters).then((val){
-      List<Map> data =(val['data']['list'] as List).cast();
-      setState(() {
-        excellentData.addAll(data);
-      });
-    });
-  }
   
   Widget _wrapList(){
-    if (excellentData == null || excellentData.length <= 0) {
+    // TODO: 在 state 中通过 Widget 使用变量
+    if (widget.excellentData == null || widget.excellentData.length <= 0) {
       return Text('优选数据为空');
     } 
 
-    List<Widget> listWidget = excellentData.map((value){
+    List<Widget> listWidget = widget.excellentData.map((value){
       return InkWell(
         onTap: (){
           print('点击了_wrapList---'); 
