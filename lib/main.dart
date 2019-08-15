@@ -3,6 +3,7 @@ import 'package:app_flutter/flutter_study/custom_bottom_appBar.dart';
 import 'package:app_flutter/flutter_study/pages/flutter_study_screen.dart';
 import 'package:app_flutter/flutter_study/pages/launch_animation_screen.dart';
 import 'package:app_flutter/index_page.dart';
+import 'package:app_flutter/provide_state/category_provide.dart';
 import 'package:app_flutter/provide_state/counter_demo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -18,6 +19,10 @@ void main(){
   var counter=Counter();
   var providers=Providers();
   providers..provide(Provider<Counter>.value(counter));
+
+  // category 
+  var categoryItem = CategoryItemState();
+  providers..provide(Provider<CategoryItemState>.value(categoryItem));
 
   runApp(
     ProviderNode(
