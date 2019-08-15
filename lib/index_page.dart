@@ -27,12 +27,12 @@ class _IndexPageState extends State<IndexPage> {
 
     BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.home),
-      title: Text('我')
+      title: Text('分类')
     ),
 
     BottomNavigationBarItem(
       icon: Icon(CupertinoIcons.home),
-      title: Text('分类')
+      title: Text('我')
     ),
 
     BottomNavigationBarItem(

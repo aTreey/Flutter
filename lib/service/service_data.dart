@@ -23,7 +23,17 @@ Future getCommunityData() async{
     return print('error ====>  $error');
   }
 } 
+// 分类数据
+  /*
+   * 获取category 数据 
+   */
 
+Future requestCategoryData(param) async{
+  return requestGet('category', geekH5httpHeaders, parameters: param);
+}
+
+
+// 首页数据
 /*
  * 获取推荐数据 
  */

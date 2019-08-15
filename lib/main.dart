@@ -3,15 +3,28 @@ import 'package:app_flutter/flutter_study/custom_bottom_appBar.dart';
 import 'package:app_flutter/flutter_study/pages/flutter_study_screen.dart';
 import 'package:app_flutter/flutter_study/pages/launch_animation_screen.dart';
 import 'package:app_flutter/index_page.dart';
+import 'package:app_flutter/provide_state/counter_demo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:provide/provide.dart';
 
 
 /*
  * flutter 项目 App 入口 
  */
-void main()=>runApp(MyApp());
+void main(){
+  // TODO: 2. 需要在main 绑定两者关系, ProviderNode 
+  var counter=Counter();
+  var providers=Providers();
+  providers..provide(Provider<Counter>.value(counter));
+
+  runApp(
+    ProviderNode(
+      child: MyApp(), 
+      providers: providers)
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override

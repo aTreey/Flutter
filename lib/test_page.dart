@@ -1,6 +1,8 @@
+import 'package:app_flutter/provide_state/counter_demo.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
+import 'package:provide/provide.dart';
 
 class TestPage extends StatefulWidget {
   @override
@@ -38,32 +40,37 @@ class _TestState extends State<TestPage> {
                 autofocus: false,
               ),
 
-              RaisedButton(
-                onPressed: _geekH5TopNavList,
-                child: Text('极客邦商城导航数据'),
-              ),
-              RaisedButton(
-                onPressed: _geeKBangBannerList,
-                child: Text('获取极客邦banner数据'),
-              ),
-
               // 头获取极客时间首页
               RaisedButton(
                 onPressed: _geekBang,
                 child: Text('伪装请求头获取极客时间首页数据'),
               ),
-              
-              // 选择按钮
-              RaisedButton(
-                onPressed: _choiceAction,
 
-                child: Text('点击请求网络'),
-              ),
+              // ListView.builder(
+              //   itemCount: 1,
+              //   itemBuilder: (context, index){
+              //     return Text(
+              //       showTextStr,
+              //       overflow: TextOverflow.ellipsis,
+              //       maxLines: 2,
+              //     );
+              //   }
+              // ),
 
               Text(
-                showTextStr,
-                // overflow: TextOverflow.ellipsis,
-                // maxLines: 2,
+                    showTextStr,
+                    overflow: TextOverflow.ellipsis,
+                    maxLines: 2,
+              ),
+
+              Padding(
+                padding: EdgeInsets.only(top: 60),
+                child: Column(
+                  children: <Widget>[
+                    CounterWidget(),
+                    CounterButtonWidget()
+                  ],
+                ),
               )
             ],
           )
@@ -115,5 +122,43 @@ class _TestState extends State<TestPage> {
         });
       });
     }
+  }
+}
+
+
+
+// 使用 provide 进行状态管理
+
+class CounterWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.all(20),
+      // TODO: 状态管理---获取状态
+      
+      child: Provide<Counter>(
+        builder: (context, child, counter){
+          return Text(
+            '${counter.value}',
+            style: Theme.of(context).textTheme.display1,
+          );
+        },
+      ),
+    );
+  }
+}
+
+class CounterButtonWidget extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      child: RaisedButton(
+        onPressed: (){ 
+          // TODO: 状态管理---修改状态
+          Provide.value<Counter>(context).addValue();
+        },
+        child: Text('点击+1'),
+      ),
+    );
   }
 }
