@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:app_flutter/model/category.dart';
+import 'package:app_flutter/model/categoryGoodsList.dart';
 import 'package:app_flutter/provide_state/category_provide.dart';
 import 'package:app_flutter/service/service_data.dart';
 import 'package:flutter/cupertino.dart';
@@ -41,7 +42,7 @@ class _CategoryState extends State<CategoryPage> {
             Column(
               children: <Widget>[
                 CategoryTopSegmentWidget(),
-                
+                CategoryItemListWidget()
               ],
             )
           ],
@@ -139,6 +140,8 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     FakeCategoryListModel model = FakeCategoryListModel.fromJson(jsonData);
     model.data.forEach((item) => print(item.mallCategoryName));
     list = model.data;
+    // TODO: 设置第一次进来后的数据
+    // Provide.value<CategoryItemState>(context).getCategoryItemlist(list[0].bxMallSubDto);
   }
 }
 
@@ -226,17 +229,125 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
   }
 }
 
-// 左边顶部类别
+// 列表
 class CategoryItemListWidget extends StatefulWidget {
   @override
   _CategoryItemListWidgetState createState() => _CategoryItemListWidgetState();
 }
 
 class _CategoryItemListWidgetState extends State<CategoryItemListWidget> {
+
+  List<CategoryGoodsDataModel> goodsList;
+  @override
+  void initState() {
+    _fakeCategoryGoodsListData();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
+    // return Center(
+    //   child: ListView.builder(
+    //     itemCount: goodsList.length,
+    //     itemBuilder: (context, index){
+    //       return _goodListWidget(index);
+    //     },
+    //   ),
+    // );
     return Container(
-      
+      width: ScreenUtil().setWidth(570),
+      height: ScreenUtil().setHeight(980),
+      child: ListView.builder(
+        shrinkWrap: true,
+        itemCount: goodsList.length,
+        itemBuilder: (context, index){
+          return _goodListWidget(index);
+        },
+      ),
     );
   }
+
+  Widget _goodListWidget(int index){
+    return InkWell(
+      onTap: (){
+
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 10, bottom: 10),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            bottom: BorderSide(color: Colors.black12, width: 1)
+          )
+        ),
+        child: Row(
+          children: <Widget>[
+            _goodsItemImage(index),
+            Column(
+              children: <Widget>[
+                _goodsName(index),
+                _goodsPrice(index),
+              ],
+            )
+          ],
+        ),
+      )
+    );
+  }
+
+  Widget _goodsItemImage(index){
+    return Container(
+      width: ScreenUtil().setWidth(180),
+      child: Image.network(goodsList[index].image),
+    );
+  }
+
+  Widget _goodsName(index){
+    return Container(
+      width: ScreenUtil().setWidth(370),
+      padding: EdgeInsets.all(5),
+      child: Text(
+        goodsList[index].goodsName,
+        maxLines: 2,
+        overflow: TextOverflow.ellipsis,
+        style: TextStyle(
+          fontSize: ScreenUtil().setSp(28),
+        ),
+      ),
+    );
+  }
+
+  Widget _goodsPrice(index){
+    return Container(
+      margin: EdgeInsets.only(top:20.0),
+      width: ScreenUtil().setWidth(370),
+      child: Row(
+        children: <Widget>[
+          Text(
+            '价格：¥${goodsList[index].presentPrice}',
+            style: TextStyle(
+              color: Colors.blueAccent,
+              fontSize: ScreenUtil().setSp(30)
+            ),
+          ),
+
+          Text(
+            '¥ ${goodsList[index].oriPrice}',
+            style: TextStyle(
+              color:  Colors.black26,
+              fontSize: ScreenUtil().setSp(28),
+              decoration: TextDecoration.lineThrough
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+
+   void _fakeCategoryGoodsListData(){
+     var jsonData = json.decode(fakeGoodsListJsonData);
+     CategoryGoodsListModel listModel = CategoryGoodsListModel.fromJson(jsonData);
+     goodsList = listModel.data;
+   }
 }
