@@ -23,6 +23,25 @@ Future getCommunityData() async{
     return print('error ====>  $error');
   }
 } 
+
+
+Future getGoodsListData(type) async{
+  try {
+    Response response;
+    Dio dio = Dio();
+    String url = mockBaseUrl + '/flutter/categoyr/goodsList' + type;
+    response = await dio.get(url);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
+} 
+
+
 // 分类数据
   /*
    * 获取category 数据 

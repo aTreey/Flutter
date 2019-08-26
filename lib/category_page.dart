@@ -23,7 +23,6 @@ class _CategoryState extends State<CategoryPage> {
 
   @override
   void initState() {
-    
     _getCategoryData();
     
     super.initState();
@@ -109,7 +108,10 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
         });
         // TODO：修改状态
         var categoryItemList = list[index].bxMallSubDto;
-        Provide.value<CategoryItemState>(context).getCategoryItemlist(categoryItemList);
+        Provide.value<CategoryItemProvide>(context).getCategoryItemlist(categoryItemList);
+
+        // 请求分类列表数据
+        _getGoodsList(index.toString());
       },
       
       child: Padding(
@@ -142,6 +144,12 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     list = model.data;
     // TODO: 设置第一次进来后的数据
     // Provide.value<CategoryItemState>(context).getCategoryItemlist(list[0].bxMallSubDto);
+  }
+  
+  void _getGoodsList(String type) async{
+    getGoodsListData(type).then((val){
+      print(val);
+    });
   }
 }
 
@@ -183,7 +191,7 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
 
     // TODO: 使用 Provide 状态管理后
 
-    return Provide<CategoryItemState>(
+    return Provide<CategoryItemProvide>(
       builder: (context, child, category){
         return Container(
           height: ScreenUtil().setHeight(80),

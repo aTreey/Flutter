@@ -1,7 +1,7 @@
 import 'package:app_flutter/model/category.dart';
 import 'package:flutter/widgets.dart';
 
-class CategoryItemState with ChangeNotifier {  
+class CategoryItemProvide with ChangeNotifier {  
   // 声明泛型变量
   List<BxMallSubDto> categoryItemlist = [];
 

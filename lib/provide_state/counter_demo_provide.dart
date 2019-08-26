@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 // 1. 创建 provide, 混入 ChangeNotifier 不用在乎监听者
 // 2. 需要在main 绑定两者关系
 // 3. 获取状态
-class Counter with ChangeNotifier {
+class CounterProvide with ChangeNotifier {
   int value = 0;
   addValue(){
     value++;

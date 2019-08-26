@@ -1,4 +1,4 @@
-import 'package:app_flutter/provide_state/counter_demo.dart';
+import 'package:app_flutter/provide_state/counter_demo_provide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
@@ -136,7 +136,7 @@ class CounterWidget extends StatelessWidget {
       margin: EdgeInsets.all(20),
       // TODO: 状态管理---获取状态
       
-      child: Provide<Counter>(
+      child: Provide<CounterProvide>(
         builder: (context, child, counter){
           return Text(
             '${counter.value}',
@@ -155,7 +155,7 @@ class CounterButtonWidget extends StatelessWidget {
       child: RaisedButton(
         onPressed: (){ 
           // TODO: 状态管理---修改状态
-          Provide.value<Counter>(context).addValue();
+          Provide.value<CounterProvide>(context).addValue();
         },
         child: Text('点击+1'),
       ),
