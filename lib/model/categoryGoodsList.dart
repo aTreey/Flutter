@@ -1,32 +1,45 @@
 class CategoryGoodsListModel {
+  bool state;
+  String errorMsg;
   List<CategoryGoodsDataModel> data;
+  int page;
+  var limit;
 
-  CategoryGoodsListModel({this.data});
+  CategoryGoodsListModel(
+      {this.state, this.errorMsg, this.data, this.page, this.limit});
 
   CategoryGoodsListModel.fromJson(Map<String, dynamic> json) {
+    state = json['state'];
+    errorMsg = json['errorMsg'];
     if (json['data'] != null) {
       data = new List<CategoryGoodsDataModel>();
       json['data'].forEach((v) {
         data.add(new CategoryGoodsDataModel.fromJson(v));
       });
     }
+    page = json['page'];
+    limit = json['limit'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['state'] = this.state;
+    data['errorMsg'] = this.errorMsg;
     if (this.data != null) {
       data['data'] = this.data.map((v) => v.toJson()).toList();
     }
+    data['page'] = this.page;
+    data['limit'] = this.limit;
     return data;
   }
 }
 
 class CategoryGoodsDataModel {
   String image;
-  double oriPrice;
-  double presentPrice;
+  var oriPrice;
+  var presentPrice;
   String goodsName;
-  String goodsId;
+  var goodsId;
 
   CategoryGoodsDataModel(
       {this.image,
