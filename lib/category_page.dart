@@ -25,7 +25,7 @@ class _CategoryState extends State<CategoryPage> {
   @override
   void initState() {
     _getCategoryData();
-    
+
     super.initState();
   }
 
@@ -73,12 +73,32 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
   List<FakeCategoryData> list;
   
   int selectedIndex = 0;
+
+  // TODO: 生命周期 1 初始化
+  // 插入渲染树时调用，只调用一次，widget创建执行的第一个方法，可以再里面初始化一些数据
+
   @override
   void initState() {
     _fakeCategoryData();
     super.initState();
   }
 
+  // 当State对象的依赖发生变化时会被调用；例如：在之前build() 中包含了一个InheritedWidget，
+  // 然后在之后的build() 中InheritedWidget发生了变化，那么此时InheritedWidget的子widget的didChangeDependencies()回调都会被调用。
+  // InheritedWidget这个widget可以由父控件向子控件共享数据
+  @override
+  void didChangeDependencies() {
+    // TODO: implement didChangeDependencies
+    super.didChangeDependencies();
+  }
+
+
+  // TODO: flutter 命令行调试
+  // TODO: flutter devices 查看设备
+  // TODO: flutter run -d 1F1FE056-7818-47E2-8156-828A99026FD4 
+
+  //TODO: build ：它主要是用于构建Widget子树的，调用多次，
+  // 初始化之后开始绘制界面，当setState触发的时候会再次被调用
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -97,6 +117,14 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
       ),
     );
   }
+
+  // TODO: 生命周期 2 状态变化
+
+  // @override
+  // void didUpdateWidget (Type oldWidget) {
+  //   super.didUpdateWidget(oldWidget);
+    
+  // }
   
   Widget _categoryInWell(int index){
     bool isSelectd=false;
@@ -144,8 +172,9 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     FakeCategoryListModel model = FakeCategoryListModel.fromJson(jsonData);
     model.data.forEach((item) => print(item.mallCategoryName));
     list = model.data;
-    // TODO: 设置第一次进来后的数据
-    // Provide.value<CategoryItemState>(context).getCategoryItemlist(list[0].bxMallSubDto);
+
+    // // 设置第一次进来后的数据
+    // Provide.value<CategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
   }
 
   void _getCategoryData() {
@@ -155,7 +184,6 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
   void _getGoodsList({String type}){
     getGoodsListData(type).then((val){
       CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(val);
-      print(goodsList);
       Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
     });
   }
@@ -173,32 +201,6 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
   @override
 
   Widget build(BuildContext context) {
-  //   return Container(
-  //     child: Container(
-  //       height: ScreenUtil().setHeight(80),
-  //       width: ScreenUtil().setWidth(570),
-  //       decoration: BoxDecoration(
-  //         color: Colors.white,
-  //         border: Border(
-  //           bottom: BorderSide(
-  //             width: 1.0,
-  //             color: Colors.black12
-  //           )
-  //         )
-  //       ),
-  //       child: ListView.builder(
-  //         scrollDirection: Axis.horizontal,
-  //         itemCount: .length,
-  //         itemBuilder: (context, index){
-  //           return _segementItem(list[index]);
-  //         },
-  //       ),
-        
-  //     ),
-  //   );
-
-    // TODO: 使用 Provide 状态管理后
-
     return Provide<CategoryItemProvide>(
       builder: (context, child, category){
         return Container(
@@ -218,7 +220,7 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
             scrollDirection: Axis.horizontal,
             itemCount: category.categoryItemlist.length,
             itemBuilder: (context, index){
-              return _segementItem(category.categoryItemlist[index]);
+              return _segementItem(index, category.categoryItemlist[index]);
             },
           ),
         );
@@ -226,17 +228,23 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
     );
   }
 
-  Widget _segementItem(BxMallSubDto item){
+  Widget _segementItem(int index, BxMallSubDto item){
+
+    bool isSelectd = false;
+    isSelectd = (index == Provide.value<CategoryItemProvide>(context).subCategoyrIndex) ? true : false;
+
     return InkWell(
       onTap: (){
-        
+        // 点击时修改状态
+        Provide.value<CategoryItemProvide>(context).changeSubCategoryIndex(index);
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
         child: Text(
           item.mallSubName,
           style: TextStyle(
-            color: Colors.black87,
+            // color:isCheck?Colors.pink:Colors.black ),
+            color: isSelectd ? Colors.blue : Colors.black87,
             fontSize: ScreenUtil().setSp(28)
           )
         ),
@@ -264,15 +272,21 @@ class _CategoryItemListWidgetState extends State<CategoryItemListWidget> {
     // 使用provider 
     return Provide<CategoryGoodsListProvide>(
       builder: (context, child, data){
-        return Container(
-          width: ScreenUtil().setWidth(570),
-          height: ScreenUtil().setHeight(980),
-          child: ListView.builder(
-            itemCount: data.goodsList.length,
-            itemBuilder: (context, index){
-              return _goodListWidget(data.goodsList, index);
-            }
-          )       
+
+        // TODO: 使用 Expanded Widget 是让子Widget有伸缩能力的小部件，它继承自Flexible, 避免高度值写死，高度溢出的BUG
+        
+        return Expanded(
+          child: Container(
+            width: ScreenUtil().setWidth(570),
+            // 使用 Expanded 后不用设置高度
+            // height: ScreenUtil().setHeight(980),
+            child: ListView.builder(
+              itemCount: data.goodsList.length,
+              itemBuilder: (context, index){
+                return _goodListWidget(data.goodsList, index);
+              }
+            )       
+          ),
         );
       },
     );
