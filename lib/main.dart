@@ -3,8 +3,9 @@ import 'package:app_flutter/flutter_study/custom_bottom_appBar.dart';
 import 'package:app_flutter/flutter_study/pages/flutter_study_screen.dart';
 import 'package:app_flutter/flutter_study/pages/launch_animation_screen.dart';
 import 'package:app_flutter/index_page.dart';
-import 'package:app_flutter/provide_state/category_goodList_provide.dart';
 import 'package:app_flutter/provide_state/category_provide.dart';
+import 'package:app_flutter/provide_state/childcategory_goodList_provide.dart';
+import 'package:app_flutter/provide_state/childcategory_provide.dart';
 import 'package:app_flutter/provide_state/counter_demo_provide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -19,13 +20,15 @@ void main(){
   // TODO: 2. 需要在main 绑定两者关系, ProviderNode 
   var providers=Providers();
   var counter=CounterProvide();
-  var categoryItemProvide = CategoryItemProvide();
+  var categoryProvide=CategoryProvide();
+  var categoryItemProvide = ChildCategoryItemProvide();
   var categoryGoodsListProvide=CategoryGoodsListProvide();
 
   // 将provide 放入顶层
   providers
     ..provide(Provider<CounterProvide>.value(counter))
-    ..provide(Provider<CategoryItemProvide>.value(categoryItemProvide))
+    ..provide(Provider<CategoryProvide>.value(categoryProvide))
+    ..provide(Provider<ChildCategoryItemProvide>.value(categoryItemProvide))
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
     
     ;

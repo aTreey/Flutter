@@ -1,6 +1,6 @@
 
 
-const mockBaseUrl ='https://easy-mock.com/mock/5d3c316e96f5a648a8495fa2';
+const mockBaseUrl ='https://www.easy-mock.com/mock/5d3c316e96f5a648a8495fa2/flutter';
 const mockServicePatj={
   'categoyr': mockBaseUrl + '',
   };

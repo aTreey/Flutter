@@ -1,5 +1,6 @@
 
 import 'dart:io';
+import 'package:app_flutter/config/chj_service_Url.dart';
 import 'package:dio/dio.dart';
 import 'package:app_flutter/config/httpHeader.dart';
 import 'package:app_flutter/config/serviceUrl.dart';
@@ -11,9 +12,10 @@ Future getCommunityData() async{
     Response response;
     Dio dio = Dio();
     // 设置请求头（类型）
+    dio.options.baseUrl=baseUrl;
+    dio.options.headers=httpHeaders;
     dio.options.contentType=ContentType.parse('application/x-www-form-urlencoded');
-    var formData={'type':1};
-    response = await dio.post(servicePath['community'], data: formData);
+    response = await dio.get(urlPath['communityPageList']);
     if (response.statusCode==200) {
       return response.data;
     } else {
@@ -25,11 +27,27 @@ Future getCommunityData() async{
 } 
 
 
+Future getMockCategoryData() async{
+  try {
+    Response response;
+    Dio dio = Dio();
+    String url = mockBaseUrl + '/categoyr/list';
+    response = await dio.get(url);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
+}
+
 Future getGoodsListData(type) async{
   try {
     Response response;
     Dio dio = Dio();
-    String url = mockBaseUrl + '/flutter/categoyr/goodsList' + type;
+    String url = mockBaseUrl + '/categoyr/goodsList' + type;
     response = await dio.get(url);
     if (response.statusCode==200) {
       return response.data;
@@ -48,7 +66,19 @@ Future getGoodsListData(type) async{
    */
 
 Future requestCategoryData(param) async{
-  return requestGet('category', geekH5httpHeaders, parameters: param);
+  try {
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = geekH5httpHeaders;
+    response = await dio.get(servicePath['bannerList']);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
 }
 
 
@@ -57,119 +87,50 @@ Future requestCategoryData(param) async{
  * 获取推荐数据 
  */
 Future getRecommendList() async{
-  return requestGet('recommendList', geekH5httpHeaders);
+  return requestGet('/home/recommend');
 }
 
 /*
  * 请求优选数据 
  */
 Future getExcellentList(param) async{
-  return requestGet('excellentList', geekH5httpHeaders, parameters: param);
+  return requestGet('/home/origional');
 }
 
 Future getTopNavListData() async{
-  return requestGet('topNavList', geekH5httpHeaders);
-  // try {
-  //   Response response;
-  //   Dio dio = Dio();
-  //   dio.options.headers = geekH5httpHeaders;
-  //   response=await dio.get(servicePath['topNavList']);
-  //   if (response.statusCode==200) {
-  //     return response.data;
-  //   } else {
-  //     throw Exception('接口错误');
-  //   }
-  // } catch (e) {
-  //   return print(e);
-  // }
+  return requestGet('topNavList');
 }
 
 /*
  * 获取极客时间banner 数据 
  */
 Future getGeekBannerListData() async{
-  return requestPost('bannerList', httpHeaders);
-
-    // try {
-    //   Response response;
-    //   // 申明Dio 对象，需要对operation 赋值
-    //   Dio dio = Dio();
-    //   dio.options.headers=httpHeaders;
-    //   response=await dio.post(servicePath['bannerList']);
-    //   print(response);
-    //   if (response.statusCode==200) {
-    //     return response.data;
-    //   } else {
-    //     throw Exception('接口错误');
-    //   } 
-    // } catch (error) {
-    //   return print(error);
-    // }
+  try {
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = httpHeaders;
+    response = await dio.get(servicePath['bannerList']);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
   }
+}
 
 /*
  * 获取极客时间所有数据接口 
  */
 Future getGeekNewAllData() async{
-  return requestPost('newAll', httpHeaders);
-
-  // try {
-  //   Dio dio = new Dio();
-  //   dio.options.headers = httpHeaders;
-  //   Response response;
-  //   response = await dio.post(servicePath['newAll']);
-  //   if (response.statusCode==200) {
-  //     return response.data;
-  //   } else {
-  //     throw Exception('极客NewAll接口错误');
-  //   }
-  // } catch (e) {
-  //   return print('getGeekNewAllData Error ====> $e');
-  // }
+  return requestGet('/home/all');
 }
 
 
 Future getNewProductListData() async{
-  return requestGet('newProduct', geekH5httpHeaders);
-
-/*
-  try {
-    Response response;
-    Dio dio = Dio();
-    dio.options.headers = geekH5httpHeaders;
-    response=await dio.get(servicePath['newProduct']);
-    if (response.statusCode==200) {
-      return response.data;
-    } else {
-      throw Exception('接口错误');
-    }
-  } catch (e) {
-    return print(e);
-  }
-  */
+  return requestGet('/home/origional');
 }
-
-/*
- * Dio get 请求测试 
- */
-Future getHttp(String typeStr) async{
-    try{
-      Response response;
-      var parameters = {'name': typeStr};
-      response = await Dio().get(
-        'https://easy-mock.com/mock/5d3c316e96f5a648a8495fa2/example/flutter_test_get',
-        queryParameters: parameters,
-        onReceiveProgress: (progress, tap){
-          print(progress);
-        } 
-      );
-      return response.data;
-    }catch(error){
-      return print(error);
-    }
-  }
-
-
   /*
  * TODO: 封装简单Get网络请求
  * url: 请求地址
@@ -204,18 +165,16 @@ Future requestPost(url, headers, {formData}) async{
  * url: 请求地址
  * {parameters} 可选参数 
  */ 
-Future requestGet(url, headers, {parameters}) async{
+Future requestGet(url, {headers, parameters}) async{
   try {
     print('start request === $url, formData = $parameters');
+    String requestURL=mockBaseUrl + url;
     Response response;
     Dio dio = Dio();
-    dio.options.headers = headers;
-    // 设置请求头（类型）
-    // dio.options.contentType=ContentType.parse('application/x-www-form-urlencoded');
     if (parameters==null) {
-      response = await dio.get(servicePath[url]);
+      response = await dio.get(requestURL);
     } else {
-      response = await dio.get(servicePath[url], queryParameters: parameters);
+      response = await dio.get(requestURL, queryParameters: parameters);
     }
     if (response.statusCode==200) {
       return response.data;

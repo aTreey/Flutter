@@ -115,12 +115,12 @@ class _TestState extends State<TestPage> {
         )
       );
     } else {
-      getHttp(typeController.text.toString()).then((result){
-        print(result);
-        setState(() {
-          showTextStr=result['data']['name'].toString();
-        });
-      });
+      // getHttp(typeController.text.toString()).then((result){
+      //   print(result);
+      //   setState(() {
+      //     showTextStr=result['data']['name'].toString();
+      //   });
+      // });
     }
   }
 }

@@ -3,14 +3,16 @@ import 'dart:convert';
 import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:app_flutter/model/category.dart';
 import 'package:app_flutter/model/categoryGoodsList.dart';
-import 'package:app_flutter/provide_state/category_goodList_provide.dart';
 import 'package:app_flutter/provide_state/category_provide.dart';
+import 'package:app_flutter/provide_state/childcategory_goodList_provide.dart';
+import 'package:app_flutter/provide_state/childcategory_provide.dart';
 import 'package:app_flutter/service/service_data.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
+import 'package:provide/provide.dart' as prefix0;
 
 class CategoryPage extends StatefulWidget {
   
@@ -24,8 +26,6 @@ class _CategoryState extends State<CategoryPage> {
 
   @override
   void initState() {
-    _getCategoryData();
-
     super.initState();
   }
 
@@ -50,19 +50,10 @@ class _CategoryState extends State<CategoryPage> {
       )
     );
   }
-
-  // 请求类别数据
-  void _getCategoryData() async{
-    var parameters = {'pageSize': pageSize};
-    requestCategoryData(parameters).then((val){
-      List<Map> data=((val['data']['list']) as List).cast();
-      print('data === $data');
-    });
-  }
 }
 
 
-// 分类列表
+// 左边大分类列表
 class CategoryListWidget extends StatefulWidget {  
   @override
   _CategoryListWidgetState createState() => _CategoryListWidgetState();
@@ -70,7 +61,7 @@ class CategoryListWidget extends StatefulWidget {
 
 class _CategoryListWidgetState extends State<CategoryListWidget> {
 
-  List<FakeCategoryData> list;
+  List<MockCategoryData> list;
   
   int selectedIndex = 0;
 
@@ -79,7 +70,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
 
   @override
   void initState() {
-    _fakeCategoryData();
+
     super.initState();
   }
 
@@ -101,21 +92,25 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
   // 初始化之后开始绘制界面，当setState触发的时候会再次被调用
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: ScreenUtil().setWidth(180),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        border: Border(
-          right: BorderSide(width: 1.0, color: Colors.black12)
-        )
-      ),
-      child: ListView.builder(
-        itemCount: list.length,
-        itemBuilder: (context, index){
-          return _categoryInWell(index);
-        }
-      ),
-    );
+    // 请求数据
+    _getCategoryData();
+    return Provide<CategoryProvide>(builder: (context, child, category){
+      return Container(
+        width: ScreenUtil().setWidth(180),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          border: Border(
+            right: BorderSide(width: 1.0, color: Colors.black12)
+          )
+        ),
+        child: ListView.builder(
+          itemCount: category.categoryList.length,
+          itemBuilder: (context, index){
+            return _categoryInWell(index);
+          }
+        ),
+      );
+    });
   }
 
   // TODO: 生命周期 2 状态变化
@@ -138,8 +133,8 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
 
         // 修改状态，切换顶部分类数据
         var categoryItemList = list[index].bxMallSubDto;
-        Provide.value<CategoryItemProvide>(context).getCategoryItemlist(categoryItemList);
-        
+        var categoryId = list[index].mallCategoryId;
+        Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(categoryItemList);
         // 请求商品列表数据，可选参数传递参数时必须加形参
         _getGoodsList(type: index.toString());
       },
@@ -167,18 +162,17 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     );
   }
 
-  void _fakeCategoryData() {
-    var jsonData = json.decode(fakeJasonData);
-    FakeCategoryListModel model = FakeCategoryListModel.fromJson(jsonData);
-    model.data.forEach((item) => print(item.mallCategoryName));
-    list = model.data;
-
-    // // 设置第一次进来后的数据
-    // Provide.value<CategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
-  }
-
   void _getCategoryData() {
-    
+    getMockCategoryData().then((val){
+      MockCategoryListModel categoryModel = MockCategoryListModel.fromJson(val);
+
+      setState(() {
+        list=categoryModel.data;
+      });
+
+      Provide.value<CategoryProvide>(context).getCategoryList(categoryModel.data);
+      Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
+    });
   }
   
   void _getGoodsList({String type}){
@@ -201,7 +195,7 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
   @override
 
   Widget build(BuildContext context) {
-    return Provide<CategoryItemProvide>(
+    return Provide<ChildCategoryItemProvide>(
       builder: (context, child, category){
         return Container(
           height: ScreenUtil().setHeight(80),
@@ -231,12 +225,13 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
   Widget _segementItem(int index, BxMallSubDto item){
 
     bool isSelectd = false;
-    isSelectd = (index == Provide.value<CategoryItemProvide>(context).subCategoyrIndex) ? true : false;
+    
+    isSelectd = (index == Provide.value<ChildCategoryItemProvide>(context).subCategoyrIndex) ? true : false;
 
     return InkWell(
       onTap: (){
-        // 点击时修改状态
-        Provide.value<CategoryItemProvide>(context).changeSubCategoryIndex(index);
+        Provide.value<ChildCategoryItemProvide>(context).changeSubCategoryIndex(index);
+        _getGoodsList(type: Provide.value<ChildCategoryItemProvide>(context).subCategoyrIndex.toString());
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -250,6 +245,17 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
         ),
       ),
     );
+  }
+
+  void _getGoodsList({String type}){
+    String path = Provide.value<ChildCategoryItemProvide>(context).categoryId;
+    if (type != '0') {
+      path = path + '_' + type;
+    }
+    getGoodsListData(path).then((val){
+      CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(val);
+      Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+    });
   }
 }
 

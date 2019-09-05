@@ -38,19 +38,6 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
 
   @override
   void initState() {
-    // getCommunityData().then((value){
-    //   setState(() {
-    //     // 
-    //     homePageContent=value.toString();
-    //   });
-    // });
-
-    getTopNavListData().then((val){
-      setState(() {
-        print('网络请求回来数据');
-        print(val);
-      });
-    });
 
     getNewProductListData().then((val){
       newProductData=(val['data']['list'] as List).cast();

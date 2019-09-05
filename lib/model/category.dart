@@ -44,20 +44,20 @@ class CategoryModel {
 // }
 
 
-class FakeCategoryListModel {
+class MockCategoryListModel {
   String code;
   String message;
-  List<FakeCategoryData> data;
+  List<MockCategoryData> data;
 
-  FakeCategoryListModel({this.code, this.message, this.data});
+  MockCategoryListModel({this.code, this.message, this.data});
 
-  FakeCategoryListModel.fromJson(Map<String, dynamic> json) {
+  MockCategoryListModel.fromJson(Map<String, dynamic> json) {
     code = json['code'];
     message = json['message'];
     if (json['data'] != null) {
-      data = new List<FakeCategoryData>();
+      data = new List<MockCategoryData>();
       json['data'].forEach((v) {
-        data.add(new FakeCategoryData.fromJson(v));
+        data.add(new MockCategoryData.fromJson(v));
       });
     }
   }
@@ -73,21 +73,21 @@ class FakeCategoryListModel {
   }
 }
 
-class FakeCategoryData {
+class MockCategoryData {
   String mallCategoryId;
   String mallCategoryName;
   List<BxMallSubDto> bxMallSubDto;
   Null comments;
   String image;
 
-  FakeCategoryData(
+  MockCategoryData(
       {this.mallCategoryId,
       this.mallCategoryName,
       this.bxMallSubDto,
       this.comments,
       this.image});
 
-  FakeCategoryData.fromJson(Map<String, dynamic> json) {
+  MockCategoryData.fromJson(Map<String, dynamic> json) {
     mallCategoryId = json['mallCategoryId'];
     mallCategoryName = json['mallCategoryName'];
     if (json['bxMallSubDto'] != null) {
