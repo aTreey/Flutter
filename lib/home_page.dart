@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
 
+import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:app_flutter/service/service_data.dart';
@@ -40,7 +42,8 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   void initState() {
 
     getNewProductListData().then((val){
-      newProductData=(val['data']['list'] as List).cast();
+      var fakeData = json.decode(fakenewProduct.toString());
+      newProductData=(fakeData['data']['list'] as List).cast();
     });
 
     getRecommendList().then((val){

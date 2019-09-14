@@ -129,7 +129,24 @@ Future getGeekNewAllData() async{
 
 
 Future getNewProductListData() async{
-  return requestGet('/home/origional');
+  // return requestGet(servicePath['newProduct'], headers: httpHeaders, isMock: false);
+
+
+  try {
+    Response response;
+    Dio dio = Dio();
+    dio.options.headers = httpHeaders;
+    response = await dio.get(servicePath['new']);
+    if (response.statusCode==200) {
+      return response.data;
+    } else {
+      throw Exception('接口错误'); 
+    }
+  } catch (error) {
+    return print('error ====>  $error');
+  }
+
+  // return requestGet('/home/origional');
 }
   /*
  * TODO: 封装简单Get网络请求
@@ -165,12 +182,16 @@ Future requestPost(url, headers, {formData}) async{
  * url: 请求地址
  * {parameters} 可选参数 
  */ 
-Future requestGet(url, {headers, parameters}) async{
+Future requestGet(url, {headers, parameters, isMock=true}) async{
   try {
     print('start request === $url, formData = $parameters');
-    String requestURL=mockBaseUrl + url;
+    
+    String requestURL= isMock ? (mockBaseUrl + url) : (geekH5BaseUrl + url);
     Response response;
     Dio dio = Dio();
+    if (headers != null){
+      dio.options.headers = headers;
+    } 
     if (parameters==null) {
       response = await dio.get(requestURL);
     } else {

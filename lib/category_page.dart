@@ -1,6 +1,3 @@
-import 'dart:convert';
-
-import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:app_flutter/model/category.dart';
 import 'package:app_flutter/model/categoryGoodsList.dart';
 import 'package:app_flutter/provide_state/category_provide.dart';
@@ -12,7 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:provide/provide.dart';
-import 'package:provide/provide.dart' as prefix0;
 
 class CategoryPage extends StatefulWidget {
   
@@ -22,8 +18,7 @@ class CategoryPage extends StatefulWidget {
 
 class _CategoryState extends State<CategoryPage> {
   int pageSize = 6;
-  List categoryData = [];
-
+  
   @override
   void initState() {
     super.initState();
@@ -132,11 +127,10 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
         });
 
         // 修改状态，切换顶部分类数据
-        var categoryItemList = list[index].bxMallSubDto;
-        var categoryId = list[index].mallCategoryId;
+        var categoryItemList = Provide.value<CategoryProvide>(context).categoryList[index].bxMallSubDto;
         Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(categoryItemList);
         // 请求商品列表数据，可选参数传递参数时必须加形参
-        _getGoodsList(type: index.toString());
+        _getGoodsList(subId: index.toString());
       },
       
       child: Padding(
@@ -165,20 +159,28 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
   void _getCategoryData() {
     getMockCategoryData().then((val){
       MockCategoryListModel categoryModel = MockCategoryListModel.fromJson(val);
-
-      setState(() {
-        list=categoryModel.data;
-      });
-
-      Provide.value<CategoryProvide>(context).getCategoryList(categoryModel.data);
-      Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
+      if (categoryModel != null) {
+        Provide.value<CategoryProvide>(context).getCategoryList(categoryModel.data);
+        if (list[0].bxMallSubDto != null) {
+          Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
+        } else {
+          Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist([]);
+        }
+      } else {
+        Provide.value<CategoryProvide>(context).getCategoryList([]);
+        Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist([]);
+      }
     });
   }
   
-  void _getGoodsList({String type}){
-    getGoodsListData(type).then((val){
+  void _getGoodsList({String subId}){
+    getGoodsListData(subId).then((val){
       CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(val);
-      Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+      if (goodsList != null) {
+        Provide.value<CategoryGoodsListProvide>(context).getGoodsList(goodsList.data);
+      } else {
+        Provide.value<CategoryGoodsListProvide>(context).getGoodsList([]);
+      }
     });
   }
 }
@@ -231,7 +233,8 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
     return InkWell(
       onTap: (){
         Provide.value<ChildCategoryItemProvide>(context).changeSubCategoryIndex(index);
-        _getGoodsList(type: Provide.value<ChildCategoryItemProvide>(context).subCategoyrIndex.toString());
+        String subId = Provide.value<ChildCategoryItemProvide>(context).subCategoyrIndex.toString();
+        _getGoodsList(subId: subId);
       },
       child: Container(
         margin: EdgeInsets.fromLTRB(5, 10, 5, 10),
@@ -247,10 +250,12 @@ class _CategoryTopSegmentWidgetState extends State<CategoryTopSegmentWidget> {
     );
   }
 
-  void _getGoodsList({String type}){
+  void _getGoodsList({String subId}){
     String path = Provide.value<ChildCategoryItemProvide>(context).categoryId;
-    if (type != '0') {
-      path = path + '_' + type;
+    if (subId != '0') {
+      path = path + '_' + subId;
+    } else {
+      path = path + '0_0';
     }
     getGoodsListData(path).then((val){
       CategoryGoodsListModel goodsList = CategoryGoodsListModel.fromJson(val);
