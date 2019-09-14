@@ -56,7 +56,7 @@ class CategoryListWidget extends StatefulWidget {
 
 class _CategoryListWidgetState extends State<CategoryListWidget> {
 
-  List<MockCategoryData> list;
+  // List<MockCategoryData> list;
   
   int selectedIndex = 0;
 
@@ -101,7 +101,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
         child: ListView.builder(
           itemCount: category.categoryList.length,
           itemBuilder: (context, index){
-            return _categoryInWell(index);
+            return _categoryInWell(index, category.categoryList);
           }
         ),
       );
@@ -116,7 +116,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
     
   // }
   
-  Widget _categoryInWell(int index){
+  Widget _categoryInWell(int index, List categoryList){
     bool isSelectd=false;
     isSelectd = (index == selectedIndex) ? true : false;
     return InkWell(
@@ -146,7 +146,7 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
               )
             ),
             child: Text(
-              list[index].mallCategoryName,
+              categoryList[index].mallCategoryName,
               textAlign: TextAlign.left, 
               overflow: TextOverflow.ellipsis,
               style: TextStyle(fontSize: ScreenUtil().setSp(26))
@@ -161,8 +161,8 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
       MockCategoryListModel categoryModel = MockCategoryListModel.fromJson(val);
       if (categoryModel != null) {
         Provide.value<CategoryProvide>(context).getCategoryList(categoryModel.data);
-        if (list[0].bxMallSubDto != null) {
-          Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(list[0].bxMallSubDto);
+        if (categoryModel.data.first.bxMallSubDto != null) {
+          Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist(categoryModel.data.first.bxMallSubDto);
         } else {
           Provide.value<ChildCategoryItemProvide>(context).getCategoryItemlist([]);
         }
