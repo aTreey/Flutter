@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:app_flutter/model/category.dart';
 import 'package:app_flutter/model/categoryGoodsList.dart';
 import 'package:app_flutter/provide_state/category_provide.dart';
@@ -158,6 +161,9 @@ class _CategoryListWidgetState extends State<CategoryListWidget> {
 
   void _getCategoryData() {
     getMockCategoryData().then((val){
+      if (val == null) {
+        val = json.decode(fakeJasonData.toString());
+      } 
       MockCategoryListModel categoryModel = MockCategoryListModel.fromJson(val);
       if (categoryModel != null) {
         Provide.value<CategoryProvide>(context).getCategoryList(categoryModel.data);

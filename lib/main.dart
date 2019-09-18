@@ -7,6 +7,7 @@ import 'package:app_flutter/provide_state/category_provide.dart';
 import 'package:app_flutter/provide_state/childcategory_goodList_provide.dart';
 import 'package:app_flutter/provide_state/childcategory_provide.dart';
 import 'package:app_flutter/provide_state/counter_demo_provide.dart';
+import 'package:app_flutter/provide_state/recommend_provide.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -23,6 +24,7 @@ void main(){
   var categoryProvide=CategoryProvide();
   var categoryItemProvide = ChildCategoryItemProvide();
   var categoryGoodsListProvide=CategoryGoodsListProvide();
+  var communityRecommendProvide=CommunityRecommendProvide();
 
   // 将provide 放入顶层
   providers
@@ -30,7 +32,7 @@ void main(){
     ..provide(Provider<CategoryProvide>.value(categoryProvide))
     ..provide(Provider<ChildCategoryItemProvide>.value(categoryItemProvide))
     ..provide(Provider<CategoryGoodsListProvide>.value(categoryGoodsListProvide))
-    
+    ..provide(Provider<CommunityRecommendProvide>.value(communityRecommendProvide))
     ;
 
   runApp(

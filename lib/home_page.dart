@@ -47,11 +47,12 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
     });
 
     getRecommendList().then((val){
-      recommendData=(val['data']['list'] as List).cast();
+      if (val!=null) {
+        recommendData=(val['data']['list'] as List).cast();
+      }
     });
 
     _getExcellentListData();
-
     super.initState();
   }
   @override
@@ -138,11 +139,13 @@ class _HomePageState extends State<HomePage> with AutomaticKeepAliveClientMixin 
   void _getExcellentListData(){
     var parameters={'page': page, 'pageSize': 6};
     getExcellentList(parameters).then((val){
-      List<Map> data =(val['data']['list'] as List).cast();
-      setState(() {
+      if (val!=null) {
+        List<Map> data =(val['data']['list'] as List).cast();
+        setState(() {
         // sleep(Duration(seconds: 5));
-        excellentData.addAll(data);
-      });
+          excellentData.addAll(data);
+        });
+      }
     });
   }
 }

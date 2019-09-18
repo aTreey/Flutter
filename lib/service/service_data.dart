@@ -136,7 +136,7 @@ Future getNewProductListData() async{
     Response response;
     Dio dio = Dio();
     dio.options.headers = httpHeaders;
-    response = await dio.get(servicePath['new']);
+    response = await dio.get(servicePath['newProduct']);
     if (response.statusCode==200) {
       return response.data;
     } else {
