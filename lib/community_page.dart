@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:app_flutter/config/serviceUrl.dart';
 import 'package:app_flutter/model/recommend.dart';
 import 'package:app_flutter/provide_state/recommend_provide.dart';
@@ -60,53 +59,11 @@ class RecommendItemWidget extends StatefulWidget {
 }
 
 class _RecommendItemWidgetState extends State<RecommendItemWidget> {  
-  var titleTextStyle = TextStyle(fontFamily: 'PingFangSC-Semibold',color: Color(0xFF2F2F2F), fontSize: ScreenUtil().setSp(28));
+    var titleTextStyle = TextStyle(fontFamily: 'PingFangSC-Semibold', fontWeight: FontWeight.bold, color: Color(0xFF2F2F2F), fontSize: ScreenUtil().setSp(34));
     var timeTextStyle = TextStyle(fontFamily: 'PingFang', color: Color(0xFF999999), fontSize: ScreenUtil().setSp(20));
     var detailTitleTextStyle = TextStyle(color: Color(0xFF2F2F2F), fontSize: ScreenUtil().setSp(32));
     var contentTextStyle = TextStyle(color: Color(0xFF656565), fontSize: ScreenUtil().setSp(30));
-    var bottomTextStyle = TextStyle(color: Color(0xFF999999), fontSize: ScreenUtil().setSp(28));
-
-    // 顶部头像相关
-    Widget profilePanelWidget(RecommendModelDataResults item){
-      var releaseTime = DateTime.fromMillisecondsSinceEpoch(item.releaseTime).toString();
-      return Padding(
-        padding: EdgeInsets.all(0),
-        // EdgeInsets.only(left: 15, top: 13),
-        child: Container(
-          // color: Colors.cyan,
-          child: Padding(
-            padding: EdgeInsets.only(left: 15, top: 13),
-            child: Row(
-            children: <Widget>[
-              Container(
-                child:InkWell(
-                  onTap: (){
-                    print('头像点击');
-                  },
-                  child: ClipOval(
-                    child: Image.network(item.avatar, width: 60, height: 60),
-                  ),
-                ),
-              ),
-              
-              
-              Padding(
-                padding: EdgeInsets.only(left: 10),
-                child: Column(
-                  // mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(item.nickname, style: titleTextStyle, textAlign: TextAlign.left),
-                    Text(releaseTime, style: timeTextStyle, textAlign: TextAlign.left)
-                    ],
-                  )
-                )
-              ],
-            ),
-          )
-        )
-      );
-    } 
+    var bottomTextStyle = TextStyle(color: Color(0xFF999999), fontSize: ScreenUtil().setSp(28)); 
 
     // 中间内容
     Widget contentDetailWidget(RecommendModelDataResults item){
@@ -186,18 +143,316 @@ class _RecommendItemWidgetState extends State<RecommendItemWidget> {
       );
     }
 
-  @override
-  Widget build(BuildContext context) {
+    Widget articleBottomWidget(RecommendModelDataResults item){
+      return Padding(
+        padding: EdgeInsets.fromLTRB(12.5, 12.5, 15, 15),
+        child: Container(
+          // color: Colors.redAccent,
+          child: Row(
+            children: <Widget>[
+              Text(item.nickname.toString(), style: bottomTextStyle),
+              Text(DateTime.fromMillisecondsSinceEpoch(item.releaseTime).toString(), style: bottomTextStyle),
+              Expanded(
+                child: Padding(
+                  padding: EdgeInsets.only(right: 10),
+                  child: Row(
+                      children: <Widget>[
+                        Text('浏览' + item.browseSum.toString(), style: bottomTextStyle),
+                        Text('评论' + item.commentSum.toString(), style: bottomTextStyle)
+                      ],
+                  ),
+                )
+              ),
+            ]
+          ),
+        )
+      );
+    }
+
+    /// 文章
+    // M01CommunityTypeContentArticle = 1,
+    // /// 图文
+    // M01CommunityTypeContentImageText = 2,
+    // /// 视频
+    // M01CommunityTypeContentVideo = 3,
+    // /// 专题
+    // M01CommunityTypeContentSpecial = 4,
+    // /// 图文问题
+    // M01CommunityTypeQuestionImageText = 6,
+    // /// 视频问题
+    // M01CommunityTypeQuestionVideo = 7,
+    // /// 图文回答
+    // M01CommunityTypeAnswerImageText = 8,
+    // /// 视频回答
+    // M01CommunityTypeAnswerVideo = 9,
+    // /// 话题
+    // M01CommunityTypeContentTopic = 15,
+    // /// 推荐用户
+    // M01CommunityTypeRecommendUser = 66,
+    // /// 运营活动
+    // M01CommunityTypeEvent = 100,
+
+  Widget operationWidget(RecommendModelDataResults data){
     return InkWell(
       onTap: () {
         
       },
       child: Column(
         children: <Widget>[
-          profilePanelWidget(widget.item),
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
           contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
           bottomWidget(widget.item)
         ],
+      ),
+    );
+  }
+
+  Widget articleWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Padding(
+            padding: EdgeInsets.all(15),
+            child: Text(data.title, style: titleTextStyle, textAlign: TextAlign.left),
+          ),
+          Image.network('https://p.ampmake.com/lixiangzhizao_app/cab69bc021d18beba25057b760a6f4dd/1568189503047.jpeg'),
+          articleBottomWidget(data)
+        ],
+      ),
+    );
+  }
+
+  Widget imageTextWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  Widget videoWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  Widget specialWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  Widget questionImageTextWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  Widget answerImageTextWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  Widget topicWidget(RecommendModelDataResults data){
+    return InkWell(
+      onTap: () {
+        
+      },
+      child: Column(
+        children: <Widget>[
+          AvatarItemWidget(
+            imageUrl:data.avatar, 
+            nickName: data.nickname, 
+            releaseTime: DateTime.fromMillisecondsSinceEpoch(data.releaseTime).toString()),
+          contentDetailWidget(widget.item),
+          // ImagesDisPlayWidget(urls: data.imageUrls),
+          bottomWidget(widget.item)
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    RecommendModelDataResults data = widget.item;    
+    if (data.type == 100) {
+      return operationWidget(data); 
+    } else if (data.type == 1) {
+      return articleWidget(data);
+    } else if (data.type == 2) {
+      return imageTextWidget(data);
+    } else if (data.type == 3) {
+      return videoWidget(data);
+    } else if (data.type == 4) {
+      return specialWidget(data);
+    } else if (data.type == 6) {
+      return questionImageTextWidget(data);
+    } else if (data.type == 7) {
+      return answerImageTextWidget(data);
+    } else if (data.type == 8) {
+      return articleWidget(data);
+    } else if (data.type == 9) {
+      return articleWidget(data);
+    } else if (data.type == 15) {
+      return topicWidget(data);
+    } else {
+      return Text('未知类型');
+    }
+  }
+}
+
+
+
+class ImagesDisPlayWidget extends StatelessWidget {
+  final List urls;
+  ImagesDisPlayWidget({this.urls});
+  List<Widget> photoWidget(urls) {
+    List<Widget> widgets=[];
+    for (var url in urls) {
+      widgets.add(
+        Container(
+          width: ScreenUtil().setWidth(200),
+          height: ScreenUtil().setHeight(200),
+          color: Colors.yellow,
+          child: Image.network(url.toString()),
+        )
+      );
+    }
+    return widgets;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    if (urls.length == 0) {
+      return Text('无图片');
+    } else {
+      return Container(
+        color: Colors.greenAccent,
+        child: GridView.count(
+          padding: EdgeInsets.all(10),
+          crossAxisCount: urls.length,
+          mainAxisSpacing: 10,  // 上下间距
+          crossAxisSpacing: 10, // 左右间距
+          children: photoWidget(this.urls),
+        ),
+      );
+    }
+  }
+}
+
+class AvatarItemWidget extends StatelessWidget {
+  final String imageUrl;
+  final String nickName;
+  final String releaseTime;
+
+  const AvatarItemWidget({this.imageUrl, this.nickName, this.releaseTime});
+
+  @override
+  Widget build(BuildContext context) {
+  var titleTextStyle = TextStyle(fontFamily: 'PingFangSC-Semibold',color: Color(0xFF2F2F2F), fontSize: ScreenUtil().setSp(28));
+  var timeTextStyle = TextStyle(fontFamily: 'PingFang', color: Color(0xFF999999), fontSize: ScreenUtil().setSp(20));
+    return Container(
+      child: Padding(
+        padding: EdgeInsets.all(5),
+        child: Row(
+            children: <Widget>[
+              Container(
+                child:InkWell(
+                  onTap: (){
+                    print('头像点击');
+                  },
+                  child: ClipOval(
+                    child: Image.network(this.imageUrl, width: 60, height: 60),
+                  ),
+                ),
+              ),
+              
+              
+              Padding(
+                padding: EdgeInsets.only(left: 10),
+                child: Column(
+                  // mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(this.nickName, style: titleTextStyle, textAlign: TextAlign.left),
+                    Text(releaseTime, style: timeTextStyle, textAlign: TextAlign.left)
+                    ],
+                  )
+                )
+              ],
+            ),
       ),
     );
   }
